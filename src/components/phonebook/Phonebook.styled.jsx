@@ -1,7 +1,32 @@
 import styled from '@emotion/styled';
 
+export const StyledButton = styled.button`
+  position: fixed;
+  left: 94%;
+  top: 85%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+`;
+
+export const Title = styled.p`
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+  font-size: 20px;
+  color: #4169e1;
+`;
+
+export const Image = styled.img`
+  display: block;
+  margin: auto;
+  width: 300px;
+  height: 300px;
+`;
+
 export const PhoneSection = styled.div`
   width: 400px;
+  margin-right: 40px;
   border: 2px solid #9e9e9e;
   border-radius: 4px;
   margin-top: 10px;

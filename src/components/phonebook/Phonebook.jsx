@@ -7,15 +7,18 @@ import {
   PhoneInput,
   PhoneBtn,
 } from './Phonebook.styled';
-import { contactsApi, useCreateContactMutation } from 'redux/mockApi';
+import { useDispatch, useSelector } from 'react-redux';
+import * as contactsOperations from '../../redux/Contacts/Contacts-operations';
 import { nanoid } from 'nanoid';
 
-function PhonebookSectionp() {
+export const PhonebookSectionp = () => {
   const [nameInput, setNameInput] = useState('');
   const [numberInput, setNumberInput] = useState('');
-  const [createContact] = useCreateContactMutation();
-  const contactsState =
-    contactsApi.endpoints.getContacts.useQueryState('').data;
+  const dispatch = useDispatch();
+  const contactsState = useSelector(state => state.contacts.entities);
+
+  const nameInputId = nanoid();
+  const numberInputId = nanoid();
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -37,11 +40,7 @@ function PhonebookSectionp() {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    const newContact = {
-      id: nanoid(),
-      name: nameInput,
-      phone: numberInput,
-    };
+    const newContact = { id: nanoid(), name: nameInput, number: numberInput };
     const contactInState = contactsState.some(
       item => item.name.toLowerCase() === nameInput.toLowerCase()
     );
@@ -49,7 +48,7 @@ function PhonebookSectionp() {
       alert(`${nameInput} is already in contacts!`);
       return;
     }
-    createContact(newContact);
+    dispatch(contactsOperations.createContact(newContact));
     setNameInput('');
     setNumberInput('');
   };
@@ -63,6 +62,7 @@ function PhonebookSectionp() {
           <PhoneInput
             type="text"
             name="name"
+            id={nameInputId}
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
@@ -74,6 +74,7 @@ function PhonebookSectionp() {
           Number
           <PhoneInput
             type="tel"
+            id={numberInputId}
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
@@ -86,6 +87,4 @@ function PhonebookSectionp() {
       </PhoneForm>
     </PhoneSection>
   );
-}
-
-export default PhonebookSectionp;
+};

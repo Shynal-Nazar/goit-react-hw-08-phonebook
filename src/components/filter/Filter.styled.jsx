@@ -6,7 +6,7 @@ export const FilterSection = styled.div`
   justify-content: center;
   align-items: center;
 
-  width: 400px;
+  width: 500px;
   border: 2px solid #9e9e9e;
   border-radius: 50%;
   margin-bottom: 15px;

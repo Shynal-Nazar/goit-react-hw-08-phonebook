@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { SpinnerDotted } from 'spinners-react';
-import { useDeleteContactMutation } from 'redux/mockApi';
 import {
   ContactsItem,
   ContactsItemName,
   ContactsBtn,
   LoaderBox,
 } from './Contact.styled';
+import * as contactsOperations from '../../redux/Contacts/Contacts-operations';
+import { useSelector, useDispatch } from 'react-redux';
 
 const ContactListItem = ({ name, number, id }) => {
-  const [deleteContact, { isLoading: isUninitialized }] =
-    useDeleteContactMutation();
-  if (isUninitialized) {
+  const [btnId, setBtnId] = useState(null);
+  const loading = useSelector(state => state.contacts.loading);
+  const dispatch = useDispatch();
+
+  if (loading === 'delete' && btnId !== null) {
     return (
       <LoaderBox className="sweet-loading">
         <SpinnerDotted size={50} color={'#0d64ef'} />
@@ -25,7 +28,13 @@ const ContactListItem = ({ name, number, id }) => {
         {name}: {number}
       </ContactsItemName>
 
-      <ContactsBtn type="button" onClick={() => deleteContact(id)}>
+      <ContactsBtn
+        type="button"
+        onClick={() => {
+          setBtnId(id);
+          dispatch(contactsOperations.deleteContact({ id, name }));
+        }}
+      >
         Delete
       </ContactsBtn>
     </ContactsItem>

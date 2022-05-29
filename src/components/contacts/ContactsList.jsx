@@ -1,16 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useGetContactsQuery } from 'redux/mockApi';
 import { SpinnerDotted } from 'spinners-react';
 import ContactListItem from './ContactsItem';
 import { ContactsSection, ContactsList } from './Contact.styled';
+import { useDispatch } from 'react-redux';
+import * as contactsOperations from '../../redux/Contacts/Contacts-operations';
 
 const ContactList = () => {
-  const { data, error, isFetching } = useGetContactsQuery('');
   const filter = useSelector(state => state.filter);
-  if (data) {
+  const dataState = useSelector(state => state.contacts.entities);
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.contacts.loading);
+
+  useEffect(() => {
+    dispatch(contactsOperations.getContacts(''));
+  }, [dispatch]);
+
+  if (dataState) {
     const getFilteredContacts = () => {
-      return data.filter(contact =>
+      return dataState.filter(contact =>
         contact.name.toLowerCase().includes(filter.toLowerCase())
       );
     };
@@ -20,8 +28,8 @@ const ContactList = () => {
       filteredContacts.length > 0 && (
         <ContactsSection>
           <ContactsList>
-            {filteredContacts.map(({ id, name, phone }) => (
-              <ContactListItem key={id} name={name} number={phone} id={id} />
+            {filteredContacts.map(({ id, name, number }) => (
+              <ContactListItem key={id} name={name} number={number} id={id} />
             ))}
           </ContactsList>
         </ContactsSection>
@@ -29,11 +37,11 @@ const ContactList = () => {
     );
   }
 
-  if (error) {
+  if (loading === 'failed') {
     return <h1>Contacts not found</h1>;
   }
 
-  if (isFetching) {
+  if (loading === 'pending') {
     return <SpinnerDotted size={150} color={'#0d64ef'} />;
   }
 };

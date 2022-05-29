@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 export const ContactsSection = styled.div`
-  width: 400px;
+  width: 500px;
   border: 2px solid #9e9e9e;
   border-radius: 4px;
   margin-top: 10px;
@@ -54,4 +54,8 @@ export const LoaderBox = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 10px;
+`;
+
+export const Wrapper = styled.div`
+  margin-top: 50px;
 `;
